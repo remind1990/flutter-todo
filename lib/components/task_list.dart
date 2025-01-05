@@ -1,25 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:todo/components/task.dart';
-import 'package:todo/components/task_tile.dart';
+import 'package:provider/provider.dart';
+import 'package:todo/data/task_data.dart';
+
+import 'task_tile.dart';
 
 class TaskList extends StatelessWidget {
-  final List<Task> tasks;
-  final Function(Task) toggleTaskState;
-
-  TaskList({required this.tasks, required this.toggleTaskState});
-
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemBuilder: (context, index) {
-        return TaskTile(
-          task: tasks[index],
-          toggleCheckboxState: (checkboxState) {
-            toggleTaskState(tasks[index]);
+    return Consumer<TaskData>(
+      builder: (context, taskData, child) {
+        return ListView.builder(
+          itemBuilder: (context, index) {
+            final task = taskData.tasks[index];
+            return TaskTile(
+              task: task,
+              toggleCheckboxState: (checkboxState) {
+                taskData.toggleTaskState(task);
+              },
+              deleteTask: () {
+                taskData.deleteTask(task);
+              },
+            );
           },
+          itemCount: taskData.taskCount,
         );
       },
-      itemCount: tasks.length,
     );
   }
 }

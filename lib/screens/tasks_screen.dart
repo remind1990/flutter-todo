@@ -1,38 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:todo/components/task.dart';
+import 'package:provider/provider.dart';
 import 'package:todo/components/task_list.dart';
+import 'package:todo/data/task_data.dart';
 import 'package:todo/screens/add_task_screen.dart';
 
-class TasksScreen extends StatefulWidget {
-  const TasksScreen({super.key});
-
-  @override
-  _TasksScreenState createState() => _TasksScreenState();
-}
-
-class _TasksScreenState extends State<TasksScreen> {
-  List<Task> tasks = [
-    Task(name: 'Buy milk'),
-    Task(name: 'Buy eggs'),
-    Task(name: 'Buy bread'),
-  ];
-
-  void addTask(String taskName) {
-    setState(() {
-      tasks.add(Task(name: taskName));
-    });
-  }
-
-  void toggleTaskState(Task task) {
-    setState(() {
-      task.toggleDone();
-    });
-  }
-
-  Widget buildButtomSheet(BuildContext context) {
-    return AddTaskModal(addTask: addTask);
-  }
-
+class TasksScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,7 +25,7 @@ class _TasksScreenState extends State<TasksScreen> {
                   backgroundColor: Colors.white,
                   radius: 30,
                 ),
-                SizedBox(width: 20), // Spacing between avatar and text
+                SizedBox(width: 20),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
@@ -67,7 +39,7 @@ class _TasksScreenState extends State<TasksScreen> {
                       ),
                     ),
                     Text(
-                      '${tasks.length} Tasks',
+                      '${Provider.of<TaskData>(context).taskCount} Tasks',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 18,
@@ -81,7 +53,7 @@ class _TasksScreenState extends State<TasksScreen> {
           Expanded(
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 20),
-              child: TaskList(tasks: tasks, toggleTaskState: toggleTaskState),
+              child: TaskList(),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
@@ -95,16 +67,17 @@ class _TasksScreenState extends State<TasksScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          showModalBottomSheet(context: context, builder: buildButtomSheet);
-          print("Add a new list");
+          showModalBottomSheet(
+            context: context,
+            builder: (context) => AddTaskModal(),
+          );
         },
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(50),
+          borderRadius: BorderRadius.circular(50.0),
         ),
         backgroundColor: Colors.lightBlueAccent,
         child: Icon(
           Icons.add,
-          size: 30,
           color: Colors.white,
         ),
       ),

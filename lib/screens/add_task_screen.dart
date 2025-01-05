@@ -1,19 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:todo/data/task_data.dart';
 
-class AddTaskModal extends StatefulWidget {
-  final Function(String) addTask;
-
-  AddTaskModal({required this.addTask});
-
-  @override
-  State<AddTaskModal> createState() => _AddTaskModalState();
-}
-
-class _AddTaskModalState extends State<AddTaskModal> {
-  String newTaskTitle = '';
-
+class AddTaskModal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    String newTaskTitle = '';
+
     return Container(
       color: Color(0xff757575),
       child: Container(
@@ -40,7 +33,6 @@ class _AddTaskModalState extends State<AddTaskModal> {
               TextField(
                 autofocus: true,
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 20, color: Colors.black),
                 onChanged: (newText) {
                   newTaskTitle = newText;
                 },
@@ -48,7 +40,8 @@ class _AddTaskModalState extends State<AddTaskModal> {
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  widget.addTask(newTaskTitle);
+                  Provider.of<TaskData>(context, listen: false)
+                      .addTask(newTaskTitle);
                   Navigator.pop(context);
                 },
                 child: Text('Add', style: TextStyle(color: Colors.white)),

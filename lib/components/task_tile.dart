@@ -4,8 +4,12 @@ import 'package:todo/components/task.dart';
 class TaskTile extends StatelessWidget {
   final Task task;
   final Function(bool?) toggleCheckboxState;
+  final VoidCallback deleteTask;
 
-  TaskTile({required this.task, required this.toggleCheckboxState});
+  TaskTile(
+      {required this.task,
+      required this.toggleCheckboxState,
+      required this.deleteTask});
 
   @override
   Widget build(BuildContext context) {
@@ -16,10 +20,20 @@ class TaskTile extends StatelessWidget {
           decoration: task.isDone ? TextDecoration.lineThrough : null,
         ),
       ),
-      trailing: Checkbox(
-        value: task.isDone,
-        onChanged: toggleCheckboxState,
-        activeColor: Colors.lightBlueAccent,
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Checkbox(
+            value: task.isDone,
+            onChanged: toggleCheckboxState,
+            activeColor: Colors.lightBlueAccent,
+          ),
+          IconButton(
+            icon: Icon(Icons.delete),
+            color: Colors.red,
+            onPressed: deleteTask,
+          ),
+        ],
       ),
     );
   }
